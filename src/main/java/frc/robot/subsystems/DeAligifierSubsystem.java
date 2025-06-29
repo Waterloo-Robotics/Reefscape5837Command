@@ -67,50 +67,46 @@ public class DeAligiferSubsystem extends SubsystemBase {
       // On Execute
       () -> {},
       // On End
-      interrupted -> this.outtakeMotor.set(0.25),
+      
       // isFinished
-      () -> (this.coralInFront() && this.coralInBack()),
+      () -> {}
       this
     );
   }
 
-  public Command positionCoralCommand() {
+  public Command Low() {
     return new FunctionalCommand(
       // Init Function
       () -> {
-        if (this.coralInBack()) {
-          this.outtakeMotor.set(.25);
-        }
+        this.target_position = this.LOW;
       },
       // On Execute
       () -> {},
       // On End
-      interrupted -> this.outtakeMotor.set(0),
+      
       // isFinished
-      () -> (!this.coralInBack()),
+      () -> {}
       this
     );
   }
-  public Command ScoreCoralCommand() {
+  public Command Home() {
     return new FunctionalCommand(
       // Init Function
       () -> {
-        if (this.coralInFront()) {
-          this.outtakeMotor.set(.50);
-        }
+        this.target_position = 0
       },
       // On Execute
       () -> {},
       // On End
-      interrupted -> this.outtakeMotor.set(0),
+      
       // isFinished
-      () -> (!this.coralInBack() && !this.coralInFront()),
+      () -> {
+        return pid_controller.atSetpoint()
+      }
       this
     );
   }
-  public Command intakeCoralCommand() {
-    return Commands.sequence(this.waitForCoralCommand(), this.positionCoralCommand());
-  }
+  
 
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
