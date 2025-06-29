@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorHomeCommand;
 import frc.robot.commands.OuttakeEmptyCommand;
 import frc.robot.commands.OuttakePositioningCoral;
 import frc.robot.commands.OuttakeScoreCoralCommand;
@@ -63,12 +64,11 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
-    // m_driverController.b().onTrue(new OuttakeWaitForCoralCommand(m_OuttakeSubsystem));
     m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
     m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
+
+    /* Elevator Buttons */
+    farmSim1.button(5).onTrue(new ElevatorHomeCommand(m_ElevatorSubsystem));
   }
 
   /**
