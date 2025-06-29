@@ -6,7 +6,13 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.ElevatorFind_HomeCommand;
 import frc.robot.commands.ElevatorHomeCommand;
+import frc.robot.commands.ElevatorL1Command;
+import frc.robot.commands.ElevatorL2Command;
+import frc.robot.commands.ElevatorL3Command;
+import frc.robot.commands.ElevatorL4Command;
+import frc.robot.commands.ElevatorManualCommand;
 import frc.robot.commands.OuttakeEmptyCommand;
 import frc.robot.commands.OuttakePositioningCoral;
 import frc.robot.commands.OuttakeScoreCoralCommand;
@@ -69,6 +75,12 @@ public class RobotContainer {
 
     /* Elevator Buttons */
     farmSim1.button(5).onTrue(new ElevatorHomeCommand(m_ElevatorSubsystem));
+    farmSim1.button(12).onTrue(new ElevatorL1Command(m_ElevatorSubsystem));
+    farmSim1.button(11).onTrue(new ElevatorL2Command(m_ElevatorSubsystem));
+    farmSim1.button(6).onTrue(new ElevatorL3Command(m_ElevatorSubsystem));
+    farmSim1.button(1).onTrue(new ElevatorL4Command(m_ElevatorSubsystem));
+    farmSim1.button(5).onTrue(new ElevatorFind_HomeCommand(m_ElevatorSubsystem));
+    farmSim1.button(7).onTrue(new ElevatorManualCommand(m_ElevatorSubsystem));
   }
 
   /**
