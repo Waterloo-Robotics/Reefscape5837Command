@@ -66,10 +66,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is
     // pressed,
     // cancelling on release.
-    // m_driverController.b().onTrue(new
-    // OuttakeWaitForCoralCommand(m_OuttakeSubsystem));
-    m_driverController.b().onTrue(Commands.sequence(new OuttakeWaitForCoralCommand(m_OuttakeSubsystem),
-        new OuttakePositioningCoral(m_OuttakeSubsystem)));
+    // m_driverController.b().onTrue(new OuttakeWaitForCoralCommand(m_OuttakeSubsystem));
+    m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
+    m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
   }
 
   /**

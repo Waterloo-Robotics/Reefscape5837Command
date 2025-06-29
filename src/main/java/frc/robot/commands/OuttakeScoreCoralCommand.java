@@ -38,7 +38,7 @@ public class OuttakeScoreCoralCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_subsystem.outtakeMotor.set(0.25);
+    m_subsystem.outtakeMotor.set(0);
   }
 
   // Returns true when the command should end.

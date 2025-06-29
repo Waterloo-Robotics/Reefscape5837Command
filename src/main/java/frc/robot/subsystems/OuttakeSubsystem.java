@@ -13,7 +13,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class OuttakeSubsystem extends SubsystemBase {
 
@@ -42,13 +44,44 @@ public class OuttakeSubsystem extends SubsystemBase {
    *
    * @return a command
    */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  public Command waitForCoralCommand() {
+    return new FunctionalCommand(
+      // Init Function
+      () -> {
+        if (!this.coralInFront()) {
+          this.outtakeMotor.set(.65);
+        }
+      },
+      // On Execute
+      () -> {},
+      // On End
+      interrupted -> this.outtakeMotor.set(0.25),
+      // isFinished
+      () -> (this.coralInFront() && this.coralInBack()),
+      this
+    );
+  }
+
+  public Command positionCoralCommand() {
+    return new FunctionalCommand(
+      // Init Function
+      () -> {
+        if (this.coralInBack()) {
+          this.outtakeMotor.set(.25);
+        }
+      },
+      // On Execute
+      () -> {},
+      // On End
+      interrupted -> this.outtakeMotor.set(0),
+      // isFinished
+      () -> (!this.coralInBack()),
+      this
+    );
+  }
+
+  public Command intakeCoralCommand() {
+    return Commands.sequence(this.waitForCoralCommand(), this.positionCoralCommand());
   }
 
   /**
