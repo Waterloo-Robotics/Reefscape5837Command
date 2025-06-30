@@ -74,13 +74,13 @@ public class RobotContainer {
     m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
 
     /* Elevator Buttons */
-    farmSim1.button(5).onTrue(new ElevatorHomeCommand(m_ElevatorSubsystem));
+    farmSim2.button(5).onTrue(new ElevatorHomeCommand(m_ElevatorSubsystem));
     farmSim1.button(12).onTrue(new ElevatorL1Command(m_ElevatorSubsystem));
     farmSim1.button(11).onTrue(new ElevatorL2Command(m_ElevatorSubsystem));
     farmSim1.button(6).onTrue(new ElevatorL3Command(m_ElevatorSubsystem));
     farmSim1.button(1).onTrue(new ElevatorL4Command(m_ElevatorSubsystem));
     farmSim1.button(5).onTrue(new ElevatorFind_HomeCommand(m_ElevatorSubsystem));
-    farmSim1.button(7).onTrue(new ElevatorManualCommand(m_ElevatorSubsystem));
+    farmSim2.button(7).onTrue(new ElevatorManualCommand(m_ElevatorSubsystem));
   }
 
   /**

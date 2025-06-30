@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ElevatorL3Command extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ElevatorSubsystem m_subsystem;
 
   /**
@@ -26,8 +26,13 @@ public class ElevatorL3Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.target_position = ElevatorSubsystem.L3_HEIGHT; 
-    }
+    m_subsystem.target_position = ElevatorSubsystem.L3_HEIGHT;
+  }
+
+  @Override
+  public void execute() {
+    m_subsystem.run_elevator();
+  }
 
   // Returns true when the command should end.
   @Override
