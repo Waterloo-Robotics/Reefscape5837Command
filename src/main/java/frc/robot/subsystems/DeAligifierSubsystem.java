@@ -106,21 +106,6 @@ public class DeAligiferSubsystem extends SubsystemBase {
       this
     );
   }
-  
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  
-    // Query some boolean state, such as a digital sensor.
-   
-
-  public boolean coralInBack() {
-    // Query some boolean state, such as a digital sensor.
-    return !this.backBeam.get();
-  }
 
   @Override
   public void periodic() {
