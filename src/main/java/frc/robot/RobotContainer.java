@@ -38,8 +38,8 @@ public class RobotContainer {
   private final CommandJoystick farmSim2 = new CommandJoystick(3);
 
   // The robot's subsystems and commands are defined here...
-  private final OuttakeSubsystem m_OuttakeSubsystem = new OuttakeSubsystem(22, 7, 6);
-  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(20, 21, farmSim1);
+  public final OuttakeSubsystem m_OuttakeSubsystem = new OuttakeSubsystem(22, 7, 6);
+  public final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(20, 21, farmSim1);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
