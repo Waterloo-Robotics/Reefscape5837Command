@@ -5,15 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.OuttakeEmptyCommand;
-import frc.robot.commands.OuttakePositioningCoral;
-import frc.robot.commands.OuttakeScoreCoralCommand;
-import frc.robot.commands.OuttakeWaitForCoralCommand;
-import frc.robot.commands.OuttakeStopCommand;
+import frc.robot.commands.DeAligifierFindHomeCommand;
+import frc.robot.subsystems.DeAligifierSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -36,6 +33,7 @@ public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
   private final OuttakeSubsystem m_OuttakeSubsystem = new OuttakeSubsystem(22, 7, 6);
+  public final DeAligifierSubsystem m_DeAligifierSubsystem = new DeAligifierSubsystem(25);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -65,18 +63,13 @@ public class RobotContainer {
     // cancelling on release.
     // m_driverController.b().onTrue(new
     // OuttakeWaitForCoralCommand(m_OuttakeSubsystem));
-    m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
-    m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
-  
+    m_driverController.y().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
+
+    m_driverController.pov(180).onTrue(m_DeAligifierSubsystem.Home());
+    m_driverController.a().onTrue(m_DeAligifierSubsystem.Low());
+    m_driverController.b().onTrue(m_DeAligifierSubsystem.High());
+    m_driverController.start().onTrue(new DeAligifierFindHomeCommand(m_DeAligifierSubsystem));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_OuttakeSubsystem);
-  }
+
 }

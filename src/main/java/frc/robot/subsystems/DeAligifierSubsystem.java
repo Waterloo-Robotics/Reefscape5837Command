@@ -15,8 +15,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class DeAligiferSubsystem extends SubsystemBase {
+public class DeAligifierSubsystem extends SubsystemBase {
 
   public SparkMax DeAligifierMotor;
   public SparkMaxConfig DeAligifierConfig;
@@ -26,15 +29,13 @@ public class DeAligiferSubsystem extends SubsystemBase {
 
   public PIDController pid_controller;
   public double target_position;
-  public Joystick controller;
 
   public boolean DeAligifier_found;
 
-  private Timer homing_timer;
-
+  public Timer homing_timer;
 
   /** Creates a new ExampleSubsystem. */
-  public DeAligifierModule(int DeAligifierMotorID, Joystick drive_Controller) {
+  public DeAligifierSubsystem(int DeAligifierMotorID) {
     this.DeAligifierMotor = new SparkMax(DeAligifierMotorID, MotorType.kBrushless);
 
     this.DeAligifierConfig = new SparkMaxConfig();
@@ -42,69 +43,76 @@ public class DeAligiferSubsystem extends SubsystemBase {
     this.DeAligifierConfig.inverted(false);
 
     this.DeAligifierMotor.configure(this.DeAligifierConfig, ResetMode.kNoResetSafeParameters,
-            PersistMode.kPersistParameters);
+        PersistMode.kPersistParameters);
 
     this.DeAligifierEncoder = this.DeAligifierMotor.getEncoder();
 
     this.homing_timer = new Timer();
 
-    this.controller = drive_Controller;
     this.pid_controller = new PIDController(0.02, 0, 0);
     this.pid_controller.setTolerance(1);
   }
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
+  public void run_arm() {
+    if (DeAligifier_found) {
+      double pid_term = pid_controller.calculate(DeAligifierEncoder.getPosition(), target_position);
+
+      double auto_power = MathUtil.clamp(pid_term, -0.9, 0.9);
+
+      DeAligifierMotor.set(auto_power);
+
+      if (pid_controller.atSetpoint()) {
+        DeAligifierMotor.set(0);
+      }
+    }
+  }
+
   public Command High() {
     return new FunctionalCommand(
-      // Init Function
-      () -> {
-        this.target_position = this.HIGH;
-      },
-      // On Execute
-      () -> {},
-      // On End
-      
-      // isFinished
-      () -> {}
-      this
-    );
+        // Init Function
+        () -> {
+          this.target_position = this.HIGH;
+        },
+        // On Execute
+        () -> {run_arm();},
+        // On End
+        interrupted -> {
+        },
+        // isFinished
+        () -> (this.pid_controller.atSetpoint()),
+        this);
   }
 
   public Command Low() {
     return new FunctionalCommand(
-      // Init Function
-      () -> {
-        this.target_position = this.LOW;
-      },
-      // On Execute
-      () -> {},
-      // On End
-      
-      // isFinished
-      () -> {}
-      this
-    );
+        // Init Function
+        () -> {
+          this.target_position = this.LOW;
+        },
+        // On Execute
+        () -> {run_arm();},
+        // On End
+        interrupted -> {
+        },
+        // isFinished
+        () -> (this.pid_controller.atSetpoint()),
+        this);
   }
+
   public Command Home() {
     return new FunctionalCommand(
-      // Init Function
-      () -> {
-        this.target_position = 0
-      },
-      // On Execute
-      () -> {},
-      // On End
-      
-      // isFinished
-      () -> {
-        return pid_controller.atSetpoint()
-      }
-      this
-    );
+        // Init Function
+        () -> {
+          this.target_position = 0;
+        },
+        // On Execute
+        () -> {run_arm();},
+        // On End
+        interrupted -> {
+        },
+        // isFinished
+        () -> (this.pid_controller.atSetpoint()),
+        this);
   }
 
   @Override
