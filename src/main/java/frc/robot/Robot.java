@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
+import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.commands.ElevatorFind_HomeCommand;
 
 /**
@@ -22,6 +22,8 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
   private Command homeElevatorOnStartCommand;
+
+  private Command DealgifierFindHomeCommand;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -72,12 +74,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -87,13 +83,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+
+    DealgifierFindHomeCommand = new DeAligifierFindHomeCommand(m_robotContainer.m_DeAligifierSubsystem);
+    DealgifierFindHomeCommand.schedule();
 
     // Create and schedule command to home the elevator
     homeElevatorOnStartCommand = new ElevatorFind_HomeCommand(m_robotContainer.m_ElevatorSubsystem);
