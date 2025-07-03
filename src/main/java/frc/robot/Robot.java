@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DeAligifierFindHomeCommand;
-
 import frc.robot.commands.ElevatorFind_HomeCommand;
 
 /**
@@ -85,8 +84,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
 
-  DealgifierFindHomeCommand = new DeAligifierFindHomeCommand(m_robotContainer.m_DeAligifierSubsystem);
-  DealgifierFindHomeCommand.schedule();
+    DealgifierFindHomeCommand = new DeAligifierFindHomeCommand(m_robotContainer.m_DeAligifierSubsystem);
+    DealgifierFindHomeCommand.schedule();
 
     // Create and schedule command to home the elevator
     homeElevatorOnStartCommand = new ElevatorFind_HomeCommand(m_robotContainer.m_ElevatorSubsystem);

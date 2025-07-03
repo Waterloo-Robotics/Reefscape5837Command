@@ -5,7 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
+import frc.robot.commands.OuttakeScoreCoralCommand;
 import frc.robot.commands.ElevatorFind_HomeCommand;
 import frc.robot.commands.ElevatorHomeCommand;
 import frc.robot.commands.ElevatorL1Command;
@@ -13,11 +13,6 @@ import frc.robot.commands.ElevatorL2Command;
 import frc.robot.commands.ElevatorL3Command;
 import frc.robot.commands.ElevatorL4Command;
 import frc.robot.commands.ElevatorManualCommand;
-import frc.robot.commands.OuttakeEmptyCommand;
-import frc.robot.commands.OuttakePositioningCoral;
-import frc.robot.commands.OuttakeScoreCoralCommand;
-import frc.robot.commands.OuttakeWaitForCoralCommand;
-import frc.robot.commands.OuttakeStopCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.DeAligifierSubsystem;
@@ -75,7 +70,6 @@ public class RobotContainer {
   private void configureBindings() {
     m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
     m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
-    m_driverController.y().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
 
     m_driverController.pov(180).onTrue(m_DeAligifierSubsystem.Home());
     m_driverController.a().onTrue(m_DeAligifierSubsystem.Low());
@@ -91,17 +85,4 @@ public class RobotContainer {
     farmSim1.button(5).onTrue(new ElevatorFind_HomeCommand(m_ElevatorSubsystem));
     farmSim2.button(7).onTrue(new ElevatorManualCommand(m_ElevatorSubsystem));
   }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_OuttakeSubsystem);
-    
-  }
-
-
 }
