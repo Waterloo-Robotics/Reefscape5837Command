@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.DeAligifierFindHomeCommand;
 
+import frc.robot.commands.ElevatorFind_HomeCommand;
+
 /**
  * The methods in this class are called automatically corresponding to each
  * mode, as described in
@@ -20,6 +22,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private Command homeElevatorOnStartCommand;
 
   private Command DealgifierFindHomeCommand;
 
@@ -84,7 +87,11 @@ public class Robot extends TimedRobot {
 
   DealgifierFindHomeCommand = new DeAligifierFindHomeCommand(m_robotContainer.m_DeAligifierSubsystem);
   DealgifierFindHomeCommand.schedule();
-}
+
+    // Create and schedule command to home the elevator
+    homeElevatorOnStartCommand = new ElevatorFind_HomeCommand(m_robotContainer.m_ElevatorSubsystem);
+    homeElevatorOnStartCommand.schedule();
+  }
 
   /** This function is called periodically during operator control. */
   @Override
