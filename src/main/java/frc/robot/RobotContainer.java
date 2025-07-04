@@ -17,11 +17,10 @@ import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.DeAligifierSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import com.pathplanner.lib.auto.NamedCommands;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -45,11 +44,15 @@ public class RobotContainer {
   public final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(20, 21, farmSim1);
   public final DeAligifierSubsystem m_DeAligifierSubsystem = new DeAligifierSubsystem(25);
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+  
   public RobotContainer() {
-    // Configure the trigger bindings
+    NamedCommands.registerCommand("ElevatorL4Command", new ElevatorL4Command((m_ElevatorSubsystem)));
+    NamedCommands.registerCommand("Outtake", new OuttakeScoreCoralCommand((m_OuttakeSubsystem)));
+    NamedCommands.registerCommand("Intake", m_OuttakeSubsystem.intakeCoralCommand());
     configureBindings();
   }
 
