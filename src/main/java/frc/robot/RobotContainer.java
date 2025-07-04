@@ -16,6 +16,7 @@ import frc.robot.commands.ElevatorManualCommand;
 import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.DeAligifierSubsystem;
+import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -41,6 +42,7 @@ public class RobotContainer {
   private final CommandJoystick farmSim2 = new CommandJoystick(3);
 
   // The robot's subsystems and commands are defined here...
+  public final DrivebaseSubsystem m_drivebaseSubsystem = new DrivebaseSubsystem(m_driverController);
   public final OuttakeSubsystem m_OuttakeSubsystem = new OuttakeSubsystem(22, 7, 6);
   public final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(20, 21, farmSim1);
   public final DeAligifierSubsystem m_DeAligifierSubsystem = new DeAligifierSubsystem(25);
@@ -51,6 +53,8 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    m_drivebaseSubsystem.setDefaultCommand(m_drivebaseSubsystem.driverControlledCommand());
   }
 
   /**

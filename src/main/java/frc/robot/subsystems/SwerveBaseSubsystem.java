@@ -76,7 +76,7 @@ public class SwerveBaseSubsystem {
         setModuleStates(states);
     }
 
-    private void drive_xbox() {
+    public void drive_xbox() {
         /* Get the inputs from the controller */
         double x = Math.pow(input_controller.getLeftY(), 2) * Math.signum(input_controller.getLeftY());
         double y = Math.pow(input_controller.getLeftX(), 2) * Math.signum(input_controller.getLeftX());
@@ -180,7 +180,7 @@ public class SwerveBaseSubsystem {
     }
 
     public void set_max_drive_speed(double max) {
-        this.max_drive_speed = Math.abs(max) * Units.feetToMeters(16);
+        this.max_drive_speed = Math.abs(max) * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
     }
 
     public enum DriveBaseStates {
