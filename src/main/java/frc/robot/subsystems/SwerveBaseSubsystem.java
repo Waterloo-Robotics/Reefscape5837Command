@@ -10,28 +10,27 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
+
 import com.kauailabs.navx.frc.AHRS;
 
 public class SwerveBaseSubsystem {
-public SwerveModule[] modules;
+    public SwerveModule[] modules;
     public SwerveModulePosition[] positions;
 
-    public static final double kWheelOffset = Units.inchesToMeters(12);
     public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d[] {
-            new Translation2d(kWheelOffset, kWheelOffset),
-            new Translation2d(kWheelOffset, -kWheelOffset),
-            new Translation2d(-kWheelOffset, kWheelOffset),
-            new Translation2d(-kWheelOffset, -kWheelOffset)
+            new Translation2d(Constants.Drivebase.kWheelOffset, Constants.Drivebase.kWheelOffset),
+            new Translation2d(Constants.Drivebase.kWheelOffset, -Constants.Drivebase.kWheelOffset),
+            new Translation2d(-Constants.Drivebase.kWheelOffset, Constants.Drivebase.kWheelOffset),
+            new Translation2d(-Constants.Drivebase.kWheelOffset, -Constants.Drivebase.kWheelOffset)
     });
 
     public SwerveDriveOdometry odometry;
 
     public DriveBaseStates current_state;
 
-    private XboxController input_controller;
+    private CommandXboxController input_controller;
     private int lock_counter;
     private boolean lock;
 
@@ -39,9 +38,7 @@ public SwerveModule[] modules;
 
     private double max_drive_speed;
 
-    public boolean field_centric = true;
-
-    public SwerveBaseSubsystem(XboxController drive_controller) {
+    public SwerveBaseSubsystem(CommandXboxController drive_controller) {
         /* Create the four swerve modules passing in each corner's CAN ID */
         this.modules = new SwerveModule[] {
                 /* Front Left */
@@ -62,14 +59,11 @@ public SwerveModule[] modules;
 
         this.gyro = new AHRS(SPI.Port.kMXP);
 
-        this.max_drive_speed = 1 * Units.feetToMeters(16);
+        this.max_drive_speed = 1 * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
 
         input_controller = drive_controller;
         lock_counter = 0;
         lock = false;
-
-        this.field_centric = true;
-
     }
 
     private void lock() {
@@ -83,32 +77,10 @@ public SwerveModule[] modules;
     }
 
     private void drive_xbox() {
-        /* Toggle Field Centric */
-        if (input_controller.getRightStickButtonPressed()) {
-            this.field_centric = !this.field_centric;
-        }
-
-        if (!field_centric) {
-            input_controller.setRumble(RumbleType.kBothRumble, 0.25);
-        } else {
-            input_controller.setRumble(RumbleType.kBothRumble, 0);
-        }
-
         /* Get the inputs from the controller */
         double x = Math.pow(input_controller.getLeftY(), 2) * Math.signum(input_controller.getLeftY());
         double y = Math.pow(input_controller.getLeftX(), 2) * Math.signum(input_controller.getLeftX());
         double rotation = Math.pow(input_controller.getRightX(), 2) * Math.signum(input_controller.getRightX());
-
-        double max_drive = 1;
-        double min_drive = 0.3;
-
-        double max_rot = 1;
-        double min_rot = 0.3;
-
-        double drive_speed_multiplier = 0.30;
-        double rotation_speed_multiplier = 1;
-
-        SmartDashboard.putNumber("Drive Multiplier", drive_speed_multiplier);
 
         /* Apply a deadband to prevent stick drift */
         x = MathUtil.applyDeadband(x, 0.15, 1);
@@ -124,7 +96,6 @@ public SwerveModule[] modules;
             } else {
                 lock_counter++;
             }
-
         } else {
             lock_counter = 0;
             lock = false;
@@ -132,9 +103,9 @@ public SwerveModule[] modules;
 
         if (!lock) {
             /* Multiply each by max velocity to get desired velocity in each direction */
-            double x_velocity_m_s = x * Units.feetToMeters(16) * drive_speed_multiplier;
-            double y_velocity_m_s = y * Units.feetToMeters(16) * drive_speed_multiplier;
-            double rotational_vel = rotation * 3 * rotation_speed_multiplier;
+            double x_velocity_m_s = x * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
+            double y_velocity_m_s = y * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
+            double rotational_vel_rad_s = rotation * Constants.Drivebase.kMaxSpinSpeed * 2 * Math.PI;
 
             /* Limit to max drive speeds */
             x_velocity_m_s = MathUtil.clamp(x_velocity_m_s, -this.max_drive_speed, this.max_drive_speed);
@@ -145,29 +116,14 @@ public SwerveModule[] modules;
              * kinematics to convert the chassic velocity to individual swerve modules
              * "states" ie rotation and drive velocity.
              */
-            ChassisSpeeds speeds = new ChassisSpeeds(x_velocity_m_s, y_velocity_m_s, rotational_vel);
-
-            if (field_centric) {
-                speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyro.getRotation2d());
-            } else {
-                speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, new Rotation2d());
-            }
+            ChassisSpeeds speeds = new ChassisSpeeds(x_velocity_m_s, y_velocity_m_s, rotational_vel_rad_s);
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, gyro.getRotation2d());
             SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
             /* Send the new states to each swerve module */
             setModuleStates(states);
         }
 
-    }
-
-    private void straight() {
-        SwerveModuleState[] states = {
-                new SwerveModuleState(0.75, Rotation2d.fromDegrees(180)),
-                new SwerveModuleState(0.75, Rotation2d.fromDegrees(180)),
-                new SwerveModuleState(0.75, Rotation2d.fromDegrees(180)),
-                new SwerveModuleState(0.75, Rotation2d.fromDegrees(180))
-        };
-        setModuleStates(states);
     }
 
     public void stop() {
@@ -206,9 +162,6 @@ public SwerveModule[] modules;
             case LOCK:
                 lock();
                 break;
-            case STRAIGHT:
-                straight();
-                break;
             case STOP:
                 stop();
                 break;
@@ -218,7 +171,6 @@ public SwerveModule[] modules;
             default:
                 lock();
         }
-
     }
 
     public void setModuleStates(SwerveModuleState[] states) {
