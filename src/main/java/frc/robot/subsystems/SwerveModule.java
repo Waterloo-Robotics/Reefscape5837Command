@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class SwerveModule {
@@ -38,7 +39,7 @@ public class SwerveModule {
 
     public SwerveModuleState last_state;
 
-    public double kDistancePerMotorRotation;
+    public double kMeterPerMotorRotation;
 
     /* Configuration */
     public boolean closedLoop;
@@ -54,17 +55,16 @@ public class SwerveModule {
          * By limiting the ramp rate to 0.5 seconds the peak current goes down from 120A
          * to 80A
          */
-        drive_config.openLoopRampRate(0.5);
+        drive_config.openLoopRampRate(0.25);
 
         /* Drive Encoder */
         drive_encoder = drive_spark.getEncoder();
 
-        double kWheelDiameter = Constants.Drive.kwheelDiameter;
-        double kWheelCircumference = kWheelDiameter * Math.PI;
-        kDistancePerMotorRotation = kWheelCircumference / Constants.Drive.kDriveRatio;
+        double kWheelCircumference = Units.inchesToMeters(Constants.Drive.kwheelDiameter) * Math.PI;
+        kMeterPerMotorRotation = kWheelCircumference / Constants.Drive.kDriveRatio;
 
-        drive_config.encoder.velocityConversionFactor(kDistancePerMotorRotation);
-        drive_config.encoder.positionConversionFactor(kDistancePerMotorRotation);
+        drive_config.encoder.velocityConversionFactor(kMeterPerMotorRotation);
+        drive_config.encoder.positionConversionFactor(kMeterPerMotorRotation);
         drive_spark.configure(drive_config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
 
         /* Steering Motor */
@@ -84,6 +84,8 @@ public class SwerveModule {
         angle_controller.setTolerance(Constants.Drive.kSteerTolerance);
         angle_controller.enableContinuousInput(-180, 180);
 
+        last_state = new SwerveModuleState(0, new Rotation2d(0));
+
         closedLoop = true;
     }
 
@@ -95,9 +97,15 @@ public class SwerveModule {
         state.optimize(last_state.angle);
         /* Calculate Feedforward Voltage */
         /* (m/s) / (m/rev) * (60s/min) = rev/min */
-        double requestedWheelSpeed = state.speedMetersPerSecond / kDistancePerMotorRotation * 60;
+        double requestedWheelSpeed = state.speedMetersPerSecond * kMeterPerMotorRotation * 60;
         double feedfowardVoltage = MathUtil.clamp(drive_feedforward_controller.calculate(requestedWheelSpeed),
                 -Constants.Drive.kFeedForwardMaxVoltage, Constants.Drive.kFeedForwardMaxVoltage);
+                
+        SmartDashboard.putNumber("Meter per Motor rev", kMeterPerMotorRotation);
+        SmartDashboard.putNumber("Requested Wheel Speed mps", state.speedMetersPerSecond);
+        SmartDashboard.putNumber("Requested Wheel Speed rpm", requestedWheelSpeed);
+
+        SmartDashboard.putNumber("Feed Forward Voltage", feedfowardVoltage);
 
         /* Calculate PID Voltage */
         double closedLoopVoltage;

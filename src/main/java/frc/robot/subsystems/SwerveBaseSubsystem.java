@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 
@@ -88,18 +89,18 @@ public class SwerveBaseSubsystem {
         rotation = MathUtil.applyDeadband(rotation, 0.2, 1);
 
         /* If no inputs are present, lock the drivebase */
-        if (Math.abs(x) + Math.abs(y) + Math.abs(rotation) < 0.15) {
-            if (lock) {
-                lock();
-            } else if (lock_counter > 50) {
-                lock = true;
-            } else {
-                lock_counter++;
-            }
-        } else {
-            lock_counter = 0;
-            lock = false;
-        }
+        // if (Math.abs(x) + Math.abs(y) + Math.abs(rotation) < 0.15) {
+        //     if (lock) {
+        //         lock();
+        //     } else if (lock_counter > 50) {
+        //         lock = true;
+        //     } else {
+        //         lock_counter++;
+        //     }
+        // } else {
+        //     lock_counter = 0;
+        //     lock = false;
+        // }
 
         if (!lock) {
             /* Multiply each by max velocity to get desired velocity in each direction */
@@ -110,7 +111,9 @@ public class SwerveBaseSubsystem {
             /* Limit to max drive speeds */
             x_velocity_m_s = MathUtil.clamp(x_velocity_m_s, -this.max_drive_speed, this.max_drive_speed);
             y_velocity_m_s = MathUtil.clamp(y_velocity_m_s, -this.max_drive_speed, this.max_drive_speed);
-
+            
+            SmartDashboard.putNumber("X Velocity", x_velocity_m_s);
+            SmartDashboard.putNumber("Y Velocity", y_velocity_m_s);
             /*
              * Convert velocity in each axis to a general chassis velocity then use the
              * kinematics to convert the chassic velocity to individual swerve modules

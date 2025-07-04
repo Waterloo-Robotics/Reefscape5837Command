@@ -28,24 +28,24 @@ public final class Constants {
     /* kV for in Volts * RPM */
     public static final int kMotorkV = 473;
     public static final double kwheelDiameter = Units.inchesToMeters(4.0);
-    public static final double kDriveRatio = 6.12 / 1.0;
+    public static final double kDriveRatio = 6.12;
     /* Drive PID */
-    public static final double kDriveP = 0.02;
+    public static final double kDriveP = 0.0;
     public static final double kDriveI = 0.0;
     public static final double kDriveD = 0.0;
     public static final double kFeedForwardMaxVoltage = 12;
-    public static final double kClosedLoopMaxVoltage = 12;
+    public static final double kClosedLoopMaxVoltage = 0;
     /* Steer PID */
     public static final double kSteerP = 0.048;
     public static final double kSteerI = 0.0;
     public static final double kSteerD = 0.0;
     public static final double kSteerTolerance = 1;
-    public static final double kMaxSteerVoltage = 6;
+    public static final double kMaxSteerVoltage = 8;
   }
 
   public static class Drivebase {
     public static final double kWheelOffset = Units.inchesToMeters(12);
-    public static final double kMaxDriveSpeed = Units.feetToMeters(14);
-    public static final double kMaxSpinSpeed = 1.5; // Rps
+    public static final double kMaxDriveSpeed = Units.feetToMeters(10);
+    public static final double kMaxSpinSpeed = 0.2; // Rps
   }
 }
