@@ -4,14 +4,13 @@
 
 package frc.robot.commands;
 
-import frc.robot.sequence.HumanPlayerSequence;
-import frc.robot.subsystems.OuttakeSubsystem;
+import frc.robot.sequence.ReefSequence;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
 /** An example command that uses an example subsystem. */
-public class CreateHumanPlayerSequence extends Command {
-  HumanPlayerSequence sequence;
+public class CreateReefSequence extends Command {
+  ReefSequence sequence;
   CommandJoystick joystick1;
   CommandJoystick joystick2;
 
@@ -20,7 +19,7 @@ public class CreateHumanPlayerSequence extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public CreateHumanPlayerSequence(HumanPlayerSequence sequence, CommandJoystick joystick1, CommandJoystick joystick2) {
+  public CreateReefSequence(ReefSequence sequence, CommandJoystick joystick1, CommandJoystick joystick2) {
     this.sequence = sequence;
     this.joystick1 = joystick1;
     this.joystick2 = joystick2;

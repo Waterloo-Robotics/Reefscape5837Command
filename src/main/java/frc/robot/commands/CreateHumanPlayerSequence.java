@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.sequence.HumanPlayerSequence;
-import frc.robot.subsystems.OuttakeSubsystem;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 
