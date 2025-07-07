@@ -97,13 +97,13 @@ public class SwerveModule {
         state.optimize(last_state.angle);
         /* Calculate Feedforward Voltage */
         /* (m/s) / (m/rev) * (60s/min) = rev/min */
-        double requestedWheelSpeed = state.speedMetersPerSecond * kMeterPerMotorRotation * 60;
-        double feedfowardVoltage = MathUtil.clamp(drive_feedforward_controller.calculate(requestedWheelSpeed),
+        double requestedMotorSpeed = (state.speedMetersPerSecond / kMeterPerMotorRotation) * 60;
+        double feedfowardVoltage = MathUtil.clamp(drive_feedforward_controller.calculate(requestedMotorSpeed),
                 -Constants.Drive.kFeedForwardMaxVoltage, Constants.Drive.kFeedForwardMaxVoltage);
                 
         SmartDashboard.putNumber("Meter per Motor rev", kMeterPerMotorRotation);
         SmartDashboard.putNumber("Requested Wheel Speed mps", state.speedMetersPerSecond);
-        SmartDashboard.putNumber("Requested Wheel Speed rpm", requestedWheelSpeed);
+        SmartDashboard.putNumber("Requested Wheel Speed rpm", requestedMotorSpeed);
 
         SmartDashboard.putNumber("Feed Forward Voltage", feedfowardVoltage);
 
@@ -112,7 +112,7 @@ public class SwerveModule {
 
         if (closedLoop) {
             closedLoopVoltage = MathUtil.clamp(
-                    drive_controller.calculate(drive_encoder.getVelocity(), requestedWheelSpeed),
+                    drive_controller.calculate(drive_encoder.getVelocity(), requestedMotorSpeed),
                     -Constants.Drive.kClosedLoopMaxVoltage, Constants.Drive.kClosedLoopMaxVoltage);
         } else {
             closedLoopVoltage = 0;

@@ -21,10 +21,10 @@ public class SwerveBaseSubsystem {
     public SwerveModulePosition[] positions;
 
     public static final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(new Translation2d[] {
-            new Translation2d(Constants.Drivebase.kWheelOffset, Constants.Drivebase.kWheelOffset),
-            new Translation2d(Constants.Drivebase.kWheelOffset, -Constants.Drivebase.kWheelOffset),
-            new Translation2d(-Constants.Drivebase.kWheelOffset, Constants.Drivebase.kWheelOffset),
-            new Translation2d(-Constants.Drivebase.kWheelOffset, -Constants.Drivebase.kWheelOffset)
+            new Translation2d(Constants.Drivebase.kWheelOffset_m, Constants.Drivebase.kWheelOffset_m),
+            new Translation2d(Constants.Drivebase.kWheelOffset_m, -Constants.Drivebase.kWheelOffset_m),
+            new Translation2d(-Constants.Drivebase.kWheelOffset_m, Constants.Drivebase.kWheelOffset_m),
+            new Translation2d(-Constants.Drivebase.kWheelOffset_m, -Constants.Drivebase.kWheelOffset_m)
     });
 
     public SwerveDriveOdometry odometry;
@@ -37,7 +37,7 @@ public class SwerveBaseSubsystem {
 
     public AHRS gyro;
 
-    private double max_drive_speed;
+    private double max_drive_speed_m_s;
 
     public SwerveBaseSubsystem(CommandXboxController drive_controller) {
         /* Create the four swerve modules passing in each corner's CAN ID */
@@ -60,7 +60,7 @@ public class SwerveBaseSubsystem {
 
         this.gyro = new AHRS(SPI.Port.kMXP);
 
-        this.max_drive_speed = 1 * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
+        this.max_drive_speed_m_s = Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed_m_s);
 
         input_controller = drive_controller;
         lock_counter = 0;
@@ -104,13 +104,13 @@ public class SwerveBaseSubsystem {
 
         if (!lock) {
             /* Multiply each by max velocity to get desired velocity in each direction */
-            double x_velocity_m_s = x * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
-            double y_velocity_m_s = y * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
-            double rotational_vel_rad_s = rotation * Constants.Drivebase.kMaxSpinSpeed * 2 * Math.PI;
+            double x_velocity_m_s = x * Constants.Drivebase.kMaxDriveSpeed_m_s;
+            double y_velocity_m_s = y * Constants.Drivebase.kMaxDriveSpeed_m_s;
+            double rotational_vel_rad_s = rotation * Constants.Drivebase.kMaxSpinSpeed_rev_s * 2 * Math.PI;
 
             /* Limit to max drive speeds */
-            x_velocity_m_s = MathUtil.clamp(x_velocity_m_s, -this.max_drive_speed, this.max_drive_speed);
-            y_velocity_m_s = MathUtil.clamp(y_velocity_m_s, -this.max_drive_speed, this.max_drive_speed);
+            x_velocity_m_s = MathUtil.clamp(x_velocity_m_s, -this.max_drive_speed_m_s, this.max_drive_speed_m_s);
+            y_velocity_m_s = MathUtil.clamp(y_velocity_m_s, -this.max_drive_speed_m_s, this.max_drive_speed_m_s);
             
             SmartDashboard.putNumber("X Velocity", x_velocity_m_s);
             SmartDashboard.putNumber("Y Velocity", y_velocity_m_s);
@@ -183,7 +183,7 @@ public class SwerveBaseSubsystem {
     }
 
     public void set_max_drive_speed(double max) {
-        this.max_drive_speed = Math.abs(max) * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed);
+        this.max_drive_speed_m_s = Math.abs(max) * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed_m_s);
     }
 
     public enum DriveBaseStates {
