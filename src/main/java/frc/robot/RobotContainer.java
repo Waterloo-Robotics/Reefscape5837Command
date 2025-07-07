@@ -65,8 +65,8 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().onTrue(new OuttakeWaitForCoralCommand(m_OuttakeSubsystem));
-    m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
-    m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
+    // m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
+    // m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
     m_driverController.y().onTrue(new CreateHumanPlayerSequence(hp_sequence,farmSim1,farmSim2 ));
     m_driverController.a().onTrue(new CreateReefSequence(reef_sequence,farmSim1,farmSim2 ));
   }
