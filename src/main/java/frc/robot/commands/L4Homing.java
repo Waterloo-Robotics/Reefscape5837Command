@@ -5,10 +5,11 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ElevatorSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ElevatorL4Command extends Command {
+public class L4Homing extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ElevatorSubsystem m_subsystem;
 
@@ -17,7 +18,7 @@ public class ElevatorL4Command extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ElevatorL4Command(ElevatorSubsystem subsystem) {
+  public L4Homing(ElevatorSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -26,19 +27,22 @@ public class ElevatorL4Command extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_subsystem.target_position = ElevatorSubsystem.L4_HEIGHT;
+    m_subsystem.homing_timer.restart();
+    m_subsystem.rightMotor.set(0.1);
+    m_subsystem.elevator_found = false;
   }
 
   @Override
-  public void execute() {
-    m_subsystem.run_elevator();
-    
+  public void end(boolean interrupted) {
+   m_subsystem.elevator_found = true;
+   m_subsystem.homing_timer.stop();
+   m_subsystem.rightMotor.set( m_subsystem.elevator_feedforward);
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_subsystem.pid_controller.atSetpoint();
-    
+    return ((m_subsystem.rightMotor.getOutputCurrent() > 5) && m_subsystem.homing_timer.hasElapsed(0.1));
   }
 }
