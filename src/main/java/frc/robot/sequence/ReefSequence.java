@@ -2,55 +2,31 @@ package frc.robot.sequence;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import frc.robot.sequence.Field.ReefSide;
+import frc.robot.sequence.Field.BranchSide;
+import frc.robot.sequence.Field.Height;
 
 public class ReefSequence {
     enum SequenceAge {
         OLD,
         NEW
-    }
-
-    /* Which Physical side of the reef? */
-    enum ReefSide {
-        UNKNOWN,
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
-    }
-
-    enum LRside {
-        /* Within the reef, what side do we want to be on? */
-        UNKNOWN,
-        RIGHT,
-        LEFT
-    }
-
-    enum Height {
-        /* what height of the reef do we want to be on? */
-        UNKNOWN,
-        L1,
-        L2,
-        L3,
-        L4
-    }
+    }    
 
     public SequenceAge age;
     public ReefSide reefside;
-    public LRside lrside;
+    public BranchSide lrside;
     public Height height;
 
     public ReefSequence() {
         this.age = SequenceAge.NEW;
-        this.reefside = reefside.UNKNOWN;
-        this.lrside = LRside.UNKNOWN;
+        this.reefside = ReefSide.UNKNOWN;
+        this.lrside = BranchSide.UNKNOWN;
         this.height = Height.UNKNOWN;
     }
 
     public Boolean isComplete() {
-        return (this.reefside != reefside.UNKNOWN) &&
-                (this.lrside != LRside.UNKNOWN) &&
+        return (this.reefside != ReefSide.UNKNOWN) &&
+                (this.lrside != BranchSide.UNKNOWN) &&
                 (this.height != Height.UNKNOWN);
     }
 
@@ -75,9 +51,9 @@ public class ReefSequence {
         }
 
         if (joystick2.button(3).getAsBoolean()){ 
-            this.lrside = LRside.LEFT;
+            this.lrside = BranchSide.LEFT;
         } else if (joystick2.button(4).getAsBoolean()){ 
-            this.lrside = LRside.RIGHT;
+            this.lrside = BranchSide.RIGHT;
         }
 
         if (joystick1.button(12).getAsBoolean()){ 
