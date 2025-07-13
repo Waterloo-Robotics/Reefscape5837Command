@@ -18,6 +18,7 @@ import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.DeAligifierSubsystem;
 import frc.robot.subsystems.DrivebaseSubsystem;
+import frc.robot.subsystems.TeleOpPathPlannerFactory;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.NamedCommands;
