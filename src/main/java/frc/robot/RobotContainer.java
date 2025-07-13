@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.OuttakeScoreCoralCommand;
+import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.commands.ElevatorFind_HomeCommand;
 import frc.robot.commands.ElevatorHomeCommand;
 import frc.robot.commands.ElevatorL1Command;
@@ -16,10 +17,9 @@ import frc.robot.commands.ElevatorManualCommand;
 import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.DeAligifierSubsystem;
-import frc.robot.subsystems.OuttakeSubsystem;
+import frc.robot.subsystems.DrivebaseSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import com.pathplanner.lib.auto.NamedCommands;
 
 /**
@@ -32,44 +32,30 @@ import com.pathplanner.lib.auto.NamedCommands;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  /* Joysticks */
   private final CommandXboxController m_driverController = new CommandXboxController(
       OperatorConstants.kDriverControllerPort);
 
   private final CommandJoystick farmSim1 = new CommandJoystick(2);
   private final CommandJoystick farmSim2 = new CommandJoystick(3);
 
-  // The robot's subsystems and commands are defined here...
+  /* Robot Subsystems */
+  public final DrivebaseSubsystem m_drivebaseSubsystem = new DrivebaseSubsystem(m_driverController);
   public final OuttakeSubsystem m_OuttakeSubsystem = new OuttakeSubsystem(22, 7, 6);
   public final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(20, 21, farmSim1);
   public final DeAligifierSubsystem m_DeAligifierSubsystem = new DeAligifierSubsystem(25);
 
-
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     NamedCommands.registerCommand("ElevatorL4Command", new ElevatorL4Command((m_ElevatorSubsystem)));
     NamedCommands.registerCommand("Outtake", new OuttakeScoreCoralCommand((m_OuttakeSubsystem)));
     NamedCommands.registerCommand("Intake", m_OuttakeSubsystem.intakeCoralCommand());
     configureBindings();
+
+    m_drivebaseSubsystem.setDefaultCommand(m_drivebaseSubsystem.driverControlledCommand());
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be
-   * created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with
-   * an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link
-   * CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
+  /* Configure trigger->command mappings */
   private void configureBindings() {
     m_driverController.b().onTrue(m_OuttakeSubsystem.intakeCoralCommand());
     m_driverController.x().onTrue((new OuttakeScoreCoralCommand(m_OuttakeSubsystem)));
