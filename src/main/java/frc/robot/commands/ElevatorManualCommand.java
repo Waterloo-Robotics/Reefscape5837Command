@@ -4,20 +4,21 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.OuttakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class OuttakeStopCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final OuttakeSubsystem m_subsystem;
+public class ElevatorManualCommand extends Command {
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
+  private final ElevatorSubsystem m_subsystem;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public OuttakeStopCommand(OuttakeSubsystem subsystem) {
+  public ElevatorManualCommand(ElevatorSubsystem subsystem) {
     m_subsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -26,20 +27,18 @@ public class OuttakeStopCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    this.m_subsystem.outtakeMotor.set(0);
+    m_subsystem.Manual_Override = true;
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    double power = MathUtil.applyDeadband(-m_subsystem.controller.getY(), 0.15, 1);
+    power = MathUtil.clamp(power, -0.3, .3);
+    m_subsystem.rightMotor.set(power + m_subsystem.elevator_feedforward);
+  }
 
-  // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return true;
+  public void end(boolean interrupted) {
+    m_subsystem.Manual_Override = false;
   }
 }
