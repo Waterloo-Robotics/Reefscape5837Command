@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.OuttakeScoreCoralCommand;
+import frc.robot.subsystems.OuttakeSubsystem;
 import frc.robot.commands.ElevatorFind_HomeCommand;
 import frc.robot.commands.ElevatorHomeCommand;
 import frc.robot.commands.ElevatorL1Command;
@@ -16,7 +17,6 @@ import frc.robot.commands.ElevatorManualCommand;
 import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.DeAligifierSubsystem;
-import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -44,11 +44,10 @@ public class RobotContainer {
   public final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem(20, 21, farmSim1);
   public final DeAligifierSubsystem m_DeAligifierSubsystem = new DeAligifierSubsystem(25);
 
-
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  
+
   public RobotContainer() {
     NamedCommands.registerCommand("ElevatorL4Command", new ElevatorL4Command((m_ElevatorSubsystem)));
     NamedCommands.registerCommand("Outtake", new OuttakeScoreCoralCommand((m_OuttakeSubsystem)));
