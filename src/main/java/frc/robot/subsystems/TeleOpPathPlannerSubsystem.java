@@ -7,38 +7,73 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.Waypoint;
 
-import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
+import frc.robot.Constants;
+import frc.robot.sequence.HumanPlayerSequence;
+import frc.robot.sequence.ReefSequence;
 
 public class TeleOpPathPlannerSubsystem {
+    /* Velocity Limits */
+    private static final double maxVelcoity_m_s = Constants.Drivebase.kMaxDriveSpeed_m_s;
+    // TODO: This is just a random value for now
+    private static final double maxAcceleration_m_s2 = Units.feetToMeters(1);
 
-    // Create a list of waypoints from poses. Each pose represents one waypoint.
-// The rotation component of the pose should be the direction of travel. Do not use holonomic rotation.
-List<Waypoint> waypoints = PathPlannerPath.waypointsFromPoses(
-        new Pose2d(3.903, 5.414, Rotation2d.fromDegrees(-90))
-                // Position 6 left
-);
-      
+    /* Rotational Limits */
+    private static final double maxRotationalVelocity_rad_s = Units
+            .rotationsToRadians(Constants.Drivebase.kMaxSpinSpeed_rev_s);
+    // TODO: This is just a random value for now
+    private static final double maxRotationalAcceleration_rad_s2 = Units.rotationsToRadians(0.5);
 
-PathConstraints constraints = new PathConstraints(3.0, 3.0, 2 * Math.PI, 4 * Math.PI); // The constraints for this path.
-// PathConstraints constraints = PathConstraints.unlimitedConstraints(12.0); // You can also use unlimited constraints, only limited by motor torque and nominal battery voltage
+    /**
+     * Limits the speed and acceleration of generated paths so that the robot
+     * is capable of executing them.
+     */
+    static final PathConstraints constraints = new PathConstraints(maxVelcoity_m_s, maxAcceleration_m_s2,
+            maxRotationalVelocity_rad_s, maxRotationalAcceleration_rad_s2);
 
-// Create the path using the waypoints created above
-PathPlannerPath path;
+    /** List of waypoints that the path will be generated from. */
+    List<Waypoint> waypoints;
 
-
+    /** Generated Path */
+    PathPlannerPath path;
 
     public TeleOpPathPlannerSubsystem() {
-        path = new PathPlannerPath(
-        waypoints,
-        constraints,
-        null, // The ideal starting state, this is only relevant for pre-planned paths, so can be null for on-the-fly paths.
-        new GoalEndState(0.0, Rotation2d.fromDegrees(-60)) // Goal end state. You can set a holonomic rotation here. If using a differential drivetrain, the rotation will have no effect.
-);
 
+    }
+
+    public PathPlannerPath CreatePathToReef(Pose3d currentPosition, ReefSequence reefPosition) {
+        /*
+         * TODO: Using the current position and where we want to be on the reef, create
+         * a
+         * PathPlannerPath and store it in 'path'. This will be returned to whoever
+         * requested
+         * a path to the reef for them to run.
+         */
+
+        // Write code here
 
         // Prevent the path from being flipped if the coordinates are already correct
         path.preventFlipping = true;
 
+        return path;
+    }
+
+    public PathPlannerPath CreatePathToCoralStation(Pose3d currentPosition, HumanPlayerSequence humanPlayerPosition) {
+        /*
+         * TODO: Using the current position and where we want to be on the coral
+         * station, create a
+         * PathPlannerPath and store it in 'path'. This will be returned to whoever
+         * requested
+         * a path to the coral station for them to run.
+         */
+
+        // Write code here
+
+        // Prevent the path from being flipped if the coordinates are already correct
+        path.preventFlipping = true;
+
+        return path;
     }
 }
