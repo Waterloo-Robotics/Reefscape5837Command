@@ -5,20 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.CreateHumanPlayerSequence;
-import frc.robot.commands.CreateReefSequence;
-import frc.robot.commands.OuttakeEmptyCommand;
-import frc.robot.commands.OuttakePositioningCoral;
 import frc.robot.commands.OuttakeScoreCoralCommand;
-import frc.robot.commands.OuttakeWaitForCoralCommand;
-import frc.robot.sequence.HumanPlayerSequence;
-import frc.robot.sequence.ReefSequence;
-import frc.robot.commands.OuttakeStopCommand;
 import frc.robot.subsystems.OuttakeSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.OuttakeScoreCoralCommand;
 import frc.robot.commands.ElevatorFind_HomeCommand;
 import frc.robot.commands.ElevatorHomeCommand;
 import frc.robot.commands.ElevatorL1Command;
@@ -29,7 +17,6 @@ import frc.robot.commands.ElevatorManualCommand;
 import frc.robot.commands.DeAligifierFindHomeCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.DeAligifierSubsystem;
-import frc.robot.subsystems.OuttakeSubsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
