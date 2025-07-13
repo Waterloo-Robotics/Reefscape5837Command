@@ -29,8 +29,6 @@ public class SwerveBaseSubsystem {
 
     public SwerveDriveOdometry odometry;
 
-    public DriveBaseStates current_state;
-
     private CommandXboxController input_controller;
     private int lock_counter;
     private boolean lock;
@@ -129,6 +127,14 @@ public class SwerveBaseSubsystem {
 
     }
 
+    /** Drive with Xbox controller, while keeping the robot at the specified angle */
+    public void drive_xbox_hold_angle() {
+        // TODO: This function will be a lot like 'drive_xbox' but will not get the rotation
+        // from the xbox controller. Instead it will be using a PID controller to determine
+        // the rotation value to hold the robot at the desired angle.
+
+    }
+
     public void stop() {
         for (int i = 0; i < 4; i++) {
             modules[i].steer_spark.set(0);
@@ -157,25 +163,6 @@ public class SwerveBaseSubsystem {
         setModuleStates(states);
     }
 
-    public void update() {
-        switch (current_state) {
-            case XBOX:
-                drive_xbox();
-                break;
-            case LOCK:
-                lock();
-                break;
-            case STOP:
-                stop();
-                break;
-            case TEST_STEER:
-                test_steer();
-                break;
-            default:
-                lock();
-        }
-    }
-
     public void setModuleStates(SwerveModuleState[] states) {
         for (int i = 0; i < 4; i++) {
             modules[i].set_module_state(states[i]);
@@ -184,13 +171,5 @@ public class SwerveBaseSubsystem {
 
     public void set_max_drive_speed(double max) {
         this.max_drive_speed_m_s = Math.abs(max) * Units.feetToMeters(Constants.Drivebase.kMaxDriveSpeed_m_s);
-    }
-
-    public enum DriveBaseStates {
-        XBOX,
-        LOCK,
-        STRAIGHT,
-        STOP,
-        TEST_STEER
     }
 }

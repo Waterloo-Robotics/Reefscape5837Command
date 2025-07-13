@@ -21,6 +21,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
         return Commands.run(swerve_modules::drive_xbox, this);
     }
 
+    public Command driverControlledHoldAngle() {
+        return Commands.run(swerve_modules::drive_xbox_hold_angle, this);
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
